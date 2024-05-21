@@ -1,16 +1,17 @@
-import re
+def convert_single_quotes_json(json_text):
+    # Replace single quotes around keys with double quotes
+    json_text = re.sub(r"'(\w+)':", r'"\1":', json_text)
+    
+    # Replace single quotes around values with double quotes
+    def replace_value_quotes(match):
+        value = match.group(1)
+        value = value.replace('"', '\\"')  # Escape existing double quotes in the value
+        return f'"{value}"'
+    
+    json_text = re.sub(r":\s*'([^']*?)'\s*(?=,|\})", lambda m: ':"' + m.group(1).replace("'", "\\'") + '"', json_text)
+    
+    # Now replace single quotes with double quotes for the remaining unmatched single quotes
+    json_text = re.sub(r"'", '"', json_text)
 
-# 定义正则表达式
-pattern = r'\bdecimal\b\s*\(\s*\d+\s*,\s*\d+\s*\)' # 匹配 'decimal' 后跟括号内的数字，考虑了空格
-pattern = fr"(?i){pattern}"  # (?i) 使正则表达式不区分大小写
-
-# 示例 SQL 语句
-sql_text = "CREATE TABLE example (id INT, price DECIMAL(10, 2), length decimal (5, 0));"
-
-# 使用 re.findall 检查 SQL 文本中所有匹配的 'DECIMAL' 声明
-matches = re.findall(pattern, sql_text)
-
-if matches:
-    print("Found DECIMAL declarations:", matches)
-else:
-    print("No DECIMAL declarations found.")
+    # Convert the modified string to a JSON object
+    return json.loads(json_text)
