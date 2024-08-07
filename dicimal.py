@@ -15,3 +15,15 @@ def convert_single_quotes_json(json_text):
 
     # Convert the modified string to a JSON object
     return json.loads(json_text)
+
+# def mask_passwords(data, mask="***"):
+#     if isinstance(data, dict):
+#         for key, value in data.items():
+#             if "password" in key.lower():
+#                 data[key] = mask
+#             elif isinstance(value, (dict, list)):
+#                 mask_passwords(value, mask)
+#     elif isinstance(data, list):
+#         for item in data:
+#             mask_passwords(item, mask)
+#     return data
